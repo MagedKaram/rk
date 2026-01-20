@@ -27,6 +27,7 @@ mongoose
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
+  "https://rk-pearl-two.vercel.app",
   process.env.FRONTEND_URL || "http://localhost:5173",
 ];
 
@@ -37,7 +38,8 @@ app.use(
       if (!origin) return callback(null, true);
       if (
         allowedOrigins.indexOf(origin) !== -1 ||
-        origin.includes("vercel.app")
+        origin.includes("vercel.app") ||
+        origin.includes("localhost")
       ) {
         callback(null, true);
       } else {
@@ -45,6 +47,8 @@ app.use(
       }
     },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 app.use(express.json());
