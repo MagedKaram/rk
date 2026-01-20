@@ -1,8 +1,10 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Building2, Users, MapPin, Search } from "lucide-react";
+import { Home, Building2, Users, MapPin, Search, Menu, X } from "lucide-react";
+import { useState } from "react";
 
 export function Navbar() {
   const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
     { path: "/", label: "الرئيسية", icon: Home },
@@ -22,17 +24,17 @@ export function Navbar() {
               <Building2 className="h-6 w-6 text-primary-foreground" />
             </div>
             <div className="flex flex-col leading-none">
-              <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                RK
+              <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                Real estate key
               </span>
-              <span className="text-xs text-muted-foreground font-semibold tracking-wider">
-                REAL ESTATE
+              <span className="text-[10px] sm:text-xs text-muted-foreground font-semibold tracking-wider">
+                EGYPT
               </span>
             </div>
           </Link>
 
-          {/* Navigation Links */}
-          <div className="flex items-center gap-1">
+          {/* Desktop Navigation Links */}
+          <div className="hidden md:flex items-center gap-1">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
@@ -52,7 +54,45 @@ export function Navbar() {
               );
             })}
           </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2 rounded-md hover:bg-accent"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+          </button>
         </div>
+
+        {/* Mobile Navigation Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden py-4 space-y-2">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = location.pathname === item.path;
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium transition-colors ${
+                    isActive
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                  }`}
+                >
+                  <Icon className="h-5 w-5" />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </div>
     </nav>
   );
